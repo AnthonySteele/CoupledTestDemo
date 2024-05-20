@@ -8,6 +8,27 @@ namespace TestsWithMocks;
 public class WeatherForecastControllerIsolatedTests
 {
     [Fact]
+    public void Controller_Should_CallService()
+    {
+        var service = Substitute.For<IWeatherForecastService>();
+        service.Get().Returns(new List<WeatherForecast>
+        {
+            new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Today),
+                Summary = "Testy",
+                TemperatureC = 20
+            }
+        });
+
+        var controller = new WeatherForecastController(new NullLogger<WeatherForecastController>(), service);
+
+        controller.Get();
+
+        service.Received().Get();
+    }
+
+    [Fact]
     public void Controller_Should_ReturnData()
     {
         var service = Substitute.For<IWeatherForecastService>();
@@ -29,6 +50,28 @@ public class WeatherForecastControllerIsolatedTests
         Assert.NotEmpty(response);
 
         Assert.Equal("Testy", response.First().Summary);
+    }
+
+    [Fact]
+    public void Service_Should_CallRepo()
+    {
+        var repo = Substitute.For<IWeatherForecastDataStore>();
+        repo.GetForecast(Arg.Any<DateOnly>(), Arg.Any<int>())
+            .Returns(new List<WeatherForecast>
+        {
+            new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Today),
+                Summary = "Testy",
+                TemperatureC = 20
+            }
+        });
+
+        var service = new WeatherForecastService(repo);
+
+        service.Get();
+
+        repo.Received().GetForecast(Arg.Any<DateOnly>(), Arg.Any<int>());
     }
 
     [Fact]
