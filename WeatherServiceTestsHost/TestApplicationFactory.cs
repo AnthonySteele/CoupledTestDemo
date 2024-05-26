@@ -12,8 +12,10 @@ public class TestApplicationFactory : WebApplicationFactory<Program>
     {
         builder.ConfigureServices(services =>
         {
-            RemoveService<IWeatherForecastDataStore>(services);
+            // this is where services that have concrete dependencies
+            // are replaced by fakes/mocks
 
+            RemoveService<IWeatherForecastDataStore>(services);
             services.AddSingleton<IWeatherForecastDataStore>(new FakeWeatherForecastDataStore());
         });
     }
