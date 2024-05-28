@@ -22,7 +22,9 @@ public class WeatherForecastControllerSociableTests
     public void Controller_Should_ReturnExpectedData()
     {
         var forecastDataStore = CreateMockWeatherForecastDataStore();
-        var controller = new WeatherForecastController(new NullLogger<WeatherForecastController>(), new WeatherForecastService(forecastDataStore));
+        var controller = new WeatherForecastController(
+            new NullLogger<WeatherForecastController>(), 
+            new WeatherForecastService(forecastDataStore));
 
         var response = controller.Get();
 
